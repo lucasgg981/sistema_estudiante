@@ -1,0 +1,27 @@
+{
+  "name": "unidad4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./css/estilos.css --minify",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./css/estilos.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucasgg981/sistema_estudiante.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucasgg981/sistema_estudiante/issues"
+  },
+  "homepage": "https://github.com/lucasgg981/sistema_estudiante#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "@tailwindcss/oxide-linux-x64-gnu": "^4.3.3",
+    "daisyui": "^5.7.19",
+    "tailwindcss": "^4.3.3"
+  }
+}

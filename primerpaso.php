@@ -28,80 +28,111 @@ if ($buscar != '') {
     );
 
 }
+
+$mensaje = $_GET['mensaje'] ?? '';
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="es" data-theme="aqua">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lista de estudiantes</title>
-    <link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
->
+    <link rel="stylesheet" href="css/estilos.css">
 </head>
-<body>
+<body class="bg-base-200 min-h-screen">
 
-<h2>Buscar estudiante</h2>
+    <div class="navbar bg-primary text-primary-content mb-6">
+        <div class="navbar-start px-4">
+            <a href="primerpaso.php" class="text-lg font-bold">Gestión de Estudiantes</a>
+        </div>
+        <div class="navbar-end gap-2 px-4">
+            <input
+                type="checkbox"
+                value="light"
+                aria-label="Cambiar tema claro u oscuro"
+                class="toggle toggle-sm theme-controller"
+            >
+            <a href="formulario.php" class="btn btn-sm bg-base-100 text-primary hover:bg-base-200">Nuevo estudiante</a>
+        </div>
+    </div>
 
-<form method="GET" action="primerpaso.php">
+    <div class="max-w-5xl mx-auto px-4">
 
-    <input 
-        type="text" 
-        name="nombre" 
-        placeholder="Ingrese nombre"
-        value="<?= htmlspecialchars($buscar) ?>"
-    >
+        <?php if ($mensaje === 'actualizado'): ?>
+            <div role="alert" class="alert alert-success alert-soft mb-4">
+                <span>Estudiante actualizado correctamente.</span>
+            </div>
+        <?php elseif ($mensaje === 'eliminado'): ?>
+            <div role="alert" class="alert alert-error alert-soft mb-4">
+                <span>Estudiante eliminado correctamente.</span>
+            </div>
+        <?php endif; ?>
 
-    <button type="submit">Buscar</button>
+        <div class="card bg-base-100 shadow mb-6">
+            <div class="card-body p-4">
+                <h2 class="card-title text-lg">Buscar estudiante</h2>
+                <form method="GET" action="primerpaso.php" class="flex flex-col sm:flex-row gap-2 mt-2">
+                    <input
+                        type="text"
+                        name="nombre"
+                        placeholder="Ingrese nombre"
+                        value="<?= htmlspecialchars($buscar) ?>"
+                        class="input flex-1"
+                    >
+                    <div class="flex gap-2">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                        <a href="primerpaso.php" class="btn btn-ghost">Mostrar todos</a>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-    <a href="primerpaso.php">Mostrar todos</a>
+        <div class="card bg-base-100 shadow">
+            <div class="overflow-x-auto">
+                <table class="table table-zebra">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th class="text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-</form>
+                    <?php while ($f = $res->fetch_assoc()): ?>
 
-<br>
+                        <tr>
+                            <td>
+                                <?= htmlspecialchars($f['nombre'].' '.$f['apellido']) ?>
+                            </td>
 
-<table border="1">
+                            <td>
+                                <?= htmlspecialchars($f['email']) ?>
+                            </td>
 
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
+                            <td class="text-right whitespace-nowrap">
+                                <a href="editar.php?id=<?= $f['id'] ?>" class="btn btn-xs btn-outline btn-primary">Editar</a>
 
-    <tbody>
+                                <a href="eliminar.php?id=<?= $f['id'] ?>"
+                                   class="btn btn-xs btn-outline btn-error"
+                                   onclick="return confirm('¿Eliminar a <?= htmlspecialchars($f['nombre']) ?>?')">
+                                   Eliminar
+                                </a>
+                            </td>
+                        </tr>
 
-    <?php while ($f = $res->fetch_assoc()): ?>
+                    <?php endwhile; ?>
 
-        <tr>
-            <td>
-                <?= htmlspecialchars($f['nombre'].' '.$f['apellido']) ?>
-            </td>
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-4 text-sm text-base-content/70">
+                Total encontrados: <?= $res->num_rows ?>
+            </div>
+        </div>
 
-            <td>
-                <?= htmlspecialchars($f['email']) ?>
-            </td>
-
-            <td>
-                <a href="editar.php?id=<?= $f['id'] ?>">Editar</a>
-
-                &nbsp;|&nbsp;
-
-                <a href="eliminar.php?id=<?= $f['id'] ?>"
-                   onclick="return confirm('¿Eliminar a <?= htmlspecialchars($f['nombre']) ?>?')">
-                   Eliminar
-                </a>
-            </td>
-        </tr>
-
-    <?php endwhile; ?>
-
-    </tbody>
-
-</table>
-
-<p>Total encontrados: <?= $res->num_rows ?></p>
+    </div>
 
 </body>
 </html>
